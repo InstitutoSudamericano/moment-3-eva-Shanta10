@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.math.BigDecimal
 
 @Service
 class CharactersService {
@@ -16,6 +17,8 @@ class CharactersService {
     lateinit var charactersRepository: CharactersRepository
     @Autowired
     lateinit var sceneRepository: SceneRepository
+    @Autowired
+    lateinit var sceneService: SceneService
     fun list ():List<Characters>{
         return charactersRepository.findAll()
     }
@@ -23,6 +26,8 @@ class CharactersService {
         try {
             sceneRepository.findById(characters.sceneId)
                 ?: throw Exception("Id de la escena no encontrada")
+
+            validateCharacter(characters)
             return charactersRepository.save(characters)
         }catch (ex : Exception){
             throw ResponseStatusException(
@@ -34,6 +39,7 @@ class CharactersService {
             charactersRepository.findById(characters.id)
                 ?: throw Exception("ID no existe")
 
+            validateCharacter(characters)
             return charactersRepository.save(characters)
         }
         catch (ex:Exception){
@@ -47,6 +53,7 @@ class CharactersService {
             response.apply {
                 description=characters.description
             }
+            validateCharacter(response)
             return charactersRepository.save(response)
         }
         catch (ex:Exception){
@@ -67,4 +74,22 @@ class CharactersService {
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
     }
+
+    private fun validateCharacter(characters: Characters) {
+        // Obtén la escena asociada al personaje
+        val sceneId = characters.sceneId ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "El personaje debe estar asociado a una escena")
+        val scene = sceneService.getSceneById(sceneId.toLong())
+
+        // Verifica si el costo del personaje es mayor que el presupuesto de la escena
+        if (characters.cost!! > scene.budget) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "El costo del personaje no puede ser mayor al presupuesto de la escena")
+        }
+        // Verifica si la suma de los costos de los personajes en la escena es válida
+        val totalCostOfCharacters = charactersRepository.sumCostBySceneId(scene.id) ?: BigDecimal.ZERO
+        if (totalCostOfCharacters + characters.cost!! > scene.budget) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "La suma de los costos de los personajes no puede sobrepasar el presupuesto de la escena")
+        }
+        // Puedes agregar más validaciones según sea necesario
+    }
+
 }

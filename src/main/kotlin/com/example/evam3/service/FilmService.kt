@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.math.BigInteger
 
 @Service
 class FilmService {
@@ -24,7 +25,8 @@ class FilmService {
             film.director?.takeIf { it.trim().isNotEmpty() }
                 ?: throw Exception("Director no debe ser vacio")
 
-            film.duration?.takeIf { it != 0L }
+            film.duration?.takeIf { it != BigInteger.ZERO }
+
                 ?: throw Exception("La duración de la película no debe ser cero o nula")
 
 
@@ -73,6 +75,8 @@ class FilmService {
             throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
         }
     }
+    fun getFilmById(id: Long): Film {
+        return filmRepository.findById(id!!)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Film not found with id: $id") }
+    }
 }
-
-
