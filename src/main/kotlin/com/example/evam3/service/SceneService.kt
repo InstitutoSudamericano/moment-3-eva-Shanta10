@@ -21,6 +21,9 @@ class SceneService {
     fun list ():List<Scene>{
         return sceneRepository.findAll()
     }
+    fun getScenesByFilmId(filmId: Long): List<Scene> {
+        return sceneRepository.findByFilmId(filmId)
+    }
     fun save(scene: Scene): Scene {
         try {
             filmRepository.findById(scene.filmId)

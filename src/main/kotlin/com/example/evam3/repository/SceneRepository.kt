@@ -12,4 +12,7 @@ interface SceneRepository : JpaRepository<Scene, Long?> {
 
     @Query("SELECT COALESCE(SUM(s.minutes), 0) FROM Scene s WHERE s.filmId = :filmId")
     fun sumDurationByFilmId(filmId: Long?): BigInteger?
+
+    fun findByFilmId(filmId: Long): List<Scene>
+
 }

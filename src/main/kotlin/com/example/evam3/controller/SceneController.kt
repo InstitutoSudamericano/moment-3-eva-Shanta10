@@ -18,7 +18,10 @@ class SceneController {
     fun list (): ResponseEntity<List<Scene>> {
         return ResponseEntity(sceneService.list(), HttpStatus.OK)
     }
-
+    @GetMapping(params = ["filmId"])
+    fun getScenesByFilmId(@RequestParam filmId: Long): ResponseEntity<List<Scene>> {
+        return ResponseEntity(sceneService.getScenesByFilmId(filmId), HttpStatus.OK)
+    }
     @PostMapping
     fun save (@RequestBody scene: Scene): ResponseEntity<Scene> {
         return ResponseEntity(sceneService.save(scene), HttpStatus.CREATED)
