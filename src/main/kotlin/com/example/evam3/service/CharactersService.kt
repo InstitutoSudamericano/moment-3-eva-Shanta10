@@ -22,6 +22,10 @@ class CharactersService {
     fun list ():List<Characters>{
         return charactersRepository.findAll()
     }
+
+    fun getCharactersBySceneId(sceneId: Long): List<Characters> {
+        return charactersRepository.findBySceneId(sceneId)
+    }
     fun save(characters: Characters): Characters {
         try {
             sceneRepository.findById(characters.sceneId)

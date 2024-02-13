@@ -1,6 +1,7 @@
 package com.example.evam3.controller
 
 import com.example.evam3.entity.Characters
+import com.example.evam3.entity.Scene
 import com.example.evam3.service.CharactersService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -17,6 +18,11 @@ class CharactersController {
     @GetMapping
     fun list (): ResponseEntity<List<Characters>> {
         return ResponseEntity(charactersService.list(), HttpStatus.OK)
+    }
+
+    @GetMapping(params = ["sceneId"])
+    fun getCharactersBySceneId(@RequestParam sceneId: Long): ResponseEntity<List<Characters>> {
+        return ResponseEntity(charactersService.getCharactersBySceneId(sceneId), HttpStatus.OK)
     }
 
     @PostMapping
