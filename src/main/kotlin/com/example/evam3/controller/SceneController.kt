@@ -42,7 +42,7 @@ class SceneController {
         return ResponseEntity(sceneService.listById(id), HttpStatus.OK)
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     fun delete (@PathVariable("id") id: Long): ResponseEntity<Boolean> {
         val deleted = sceneService.delete(id)
         return if (deleted == true) {

@@ -45,7 +45,7 @@ class CharactersController {
         return ResponseEntity(charactersService.listById(id), HttpStatus.OK)
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     fun delete (@PathVariable("id") id: Long): ResponseEntity<Boolean> {
         val deleted = charactersService.delete(id)
         return if (deleted == true) {

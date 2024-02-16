@@ -11,7 +11,7 @@ class Characters {
     @Column(updatable = false)
     var id: Long? = null
     var description: String? = null
-    var cost: BigDecimal? = null
+    var cost: BigDecimal? = null    
     @Column(name="scene_id")
     var sceneId: Long? = null
 }

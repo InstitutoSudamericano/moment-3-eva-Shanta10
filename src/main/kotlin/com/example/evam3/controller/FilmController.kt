@@ -39,7 +39,7 @@ class FilmController {
         return ResponseEntity(filmService.listById(id), HttpStatus.OK)
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     fun delete (@PathVariable("id") id: Long): ResponseEntity<Boolean> {
         val deleted = filmService.delete(id)
         return if (deleted == true) {
